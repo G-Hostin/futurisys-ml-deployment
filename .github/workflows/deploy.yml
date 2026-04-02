@@ -1,0 +1,20 @@
+name: CD Deploy to Hugging Face
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Push to Hugging Face Space
+        uses: JacobLinCool/hugging-face-sync@v1
+        with:
+          github: ${{ github.repository }}
+          space: g-hostin/futurisys-ml-deployment
+          token: ${{ secrets.HF_TOKEN }}

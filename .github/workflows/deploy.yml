@@ -11,10 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Push to Hugging Face Space
-        uses: JacobLinCool/hugging-face-sync@v1
-        with:
-          github: ${{ github.repository }}
-          space: g-hostin/futurisys-ml-deployment
-          token: ${{ secrets.HF_TOKEN }}
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://g-hostin:$HF_TOKEN@huggingface.co/spaces/g-hostin/futurisys-ml-deployment
+          git push hf main --force

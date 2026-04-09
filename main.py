@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 import joblib
-import numpy as np
 from app.schemas import EmployeeInput, PredictionOutput
 from app.preprocessing import preprocess_input
 

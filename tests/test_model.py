@@ -1,5 +1,4 @@
 import joblib
-import numpy as np
 from app.preprocessing import preprocess_input
 
 

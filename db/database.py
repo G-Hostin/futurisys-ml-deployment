@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv() # charge les variables
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///data.db")
 
 engine = create_engine(DATABASE_URL) # crée la connexion avec PostgreSQL
 SessionLocal = sessionmaker(bind=engine) # fabrique les sessions

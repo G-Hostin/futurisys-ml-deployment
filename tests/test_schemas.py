@@ -57,7 +57,7 @@ def test_missing_field():
 
 def test_wrong_type():
     data = {
-        "age": "35", "revenu_mensuel": 5000,
+        "age": "pas un nombre", "revenu_mensuel": 5000,
         "statut_marital": "Célibataire", "departement": "Consulting",
         "poste": "Consultant", "nombre_experiences_precedentes": 3,
         "annee_experience_totale": 10, "annees_dans_l_entreprise": 5,

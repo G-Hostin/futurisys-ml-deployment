@@ -1,3 +1,12 @@
+---
+title: Futurisys ML Deployment
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # Futurisys ML Deployment
 
 API de déploiement d'un modèle de classification automatique, développée avec FastAPI.

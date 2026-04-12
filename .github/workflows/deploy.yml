@@ -13,10 +13,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
+
+      - name: Install git-lfs
+        run: git lfs install
+
+      - name: Track binary files with LFS
+        run: git lfs track "*.joblib"
 
       - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          git config user.email "ci@github.com"
+          git config user.name "CI"
+          git add .gitattributes
+          git commit -m "chore: track joblib with LFS" --allow-empty
           git remote add hf https://g-hostin:$HF_TOKEN@huggingface.co/spaces/g-hostin/futurisys-ml-deployment
           git push hf main --force

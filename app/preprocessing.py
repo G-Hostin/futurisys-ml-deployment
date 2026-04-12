@@ -28,7 +28,7 @@ def preprocess_input(data: dict) -> pd.DataFrame:
 
     # one-hot encoding avec les memes colonnes que le modele attend
     cat_cols = df.select_dtypes(include=["object", "string"]).columns.tolist()
-    df = pd.get_dummies(df, columns=cat_cols, drop_first=True, dtype=int)
+    df = pd.get_dummies(df, columns=cat_cols, dtype=int)
 
     # le modele attend exactement 38 features dans un ordre precis
     expected_cols = [

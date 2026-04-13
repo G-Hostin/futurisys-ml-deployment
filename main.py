@@ -6,7 +6,7 @@ from app.preprocessing import preprocess_input
 from db.database import engine, SessionLocal, Base
 from db.models import PredictionInput, PredictionOutput as PredictionOutputDB
 
-Base.metadata.create_all(engine)
+Base.metadata.create_all(engine) # au demarrage, création des tables si elles existent pas deja
 
 app = FastAPI(
     title="Futurisys ML API",
@@ -18,7 +18,7 @@ model = joblib.load("model/model_xgb.joblib")
 THRESHOLD = 0.545
 
 
-def get_db():
+def get_db(): # fonction qui ouvre une session
     db = SessionLocal()
     try:
         yield db
@@ -26,14 +26,22 @@ def get_db():
         db.close()
 
 
-@app.get("/")
+@app.get("/", summary="Health check", description="Vérifie que l'API est en ligne.")
 def root():
     return {"message": "Futurisys ML API is running"}
 
 
-@app.post("/predict", response_model=PredictionOutput)
-def predict(employee: EmployeeInput, db: Session = Depends(get_db)):
-    df = preprocess_input(employee.model_dump())
+@app.post(
+    "/predict",
+    response_model=PredictionOutput,
+    summary="Prédire l'attrition d'un employé",
+    description="Reçoit les données RH d'un employé et retourne la prédiction "
+    "de départ (0 = reste, 1 = quitte), la probabilité associée, "
+    "et un niveau de risque (faible, modéré, élevé). "
+    "Le seuil de classification est fixé à 0.545.",
+)
+def predict(employee: EmployeeInput, db: Session = Depends(get_db)): #depends appelle get_db à chaque requete et passe la session a l'endpoint
+    df = preprocess_input(employee.model_dump()) # converti l'objet Pydantic en dictionnaire python pour le passer au preprocess
     proba = model.predict_proba(df)[:, 1][0]
     prediction = int(proba >= THRESHOLD)
 
@@ -48,7 +56,7 @@ def predict(employee: EmployeeInput, db: Session = Depends(get_db)):
     db_input = PredictionInput(**employee.model_dump())
     db.add(db_input)
     db.commit()
-    db.refresh(db_input)
+    db.refresh(db_input) # recharge pour récupérer l'id de PostgreSQL
 
     # enregistrer l'output en base
     db_output = PredictionOutputDB(
